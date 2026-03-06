@@ -1,0 +1,121 @@
+{
+  "name": "8. SystemsExercise_Ryan",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        0
+      ],
+      "id": "7a417ad5-a232-4241-990b-496c68aa840e",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "content": "AI Data Transformer – CRM Record Builder\n\n🎯 Objective\nConvert messy free-text inquiry into a structured CRM-ready record.\n\n🧱 Requirements\nSimulate a business inquiry message.\nUse AI to extract structured fields.\nReturn a clean JSON object ready for API use.\n\n📤 Expected Behavior\nYour workflow should extract:\nCompany name\nContact name\nEmail\nUser counts\nServices requested\nTimeline\nInquiry type\n\nIf a field is missing, handle it gracefully.\nDo not manually parse the string.\n\n⭐ Bonus\nAdd a validation step:\nIf email is missing → route for manual review.",
+        "height": 544,
+        "width": 400
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -896,
+        -256
+      ],
+      "typeVersion": 1,
+      "id": "5d750971-95df-495b-bada-cbb924e0b686",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"message\": \"Hi, this is Sarah from BluePeak Logistics. We are looking to outsource CRM implementation for around 25 sales users and 8 support agents. Ideally we want automation, reporting dashboards, and integration with our accounting system. Our timeline is Q3 this year. You can reach me at sarah@bluepeaklogistics.com.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -160,
+        0
+      ],
+      "id": "2e7d3446-1090-4684-9ffe-f47de9c08192",
+      "name": "Initialize data"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "GPT-4O"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=transform {{ $json.message }} into JSON format:\n{\n\"Company Name\": {{$json.company_name}},\n\"Contact Name\": {{$json.contact_name}},\n\"Contact Email\": {{$json.email}},\n\"User Counts\": {{$json.user_counts}},\n\"Services Requested\": {{$json.services_requested}},\n\"Timeline\": {{$json.timeline}},\n\"Inquiry\": {{$json.inquiry_type}}\n\nmake sure the JSON is in a valid format with proper opening and closing curly braces\nstrictly do a JSON output and do not include any outside text"
+            },
+            {}
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        48,
+        0
+      ],
+      "id": "d1e8cf53-dc86-418d-90de-215172297051",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "73D8Q0eiP6H4oZ8D",
+          "name": "Bryan Open AI"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Initialize data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize data": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e26edb02-d09d-4214-bb0d-39d1a3627305",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "51ce05397d9d70e0b86c1b77811017c472118b96e6356254631cce762985dbc2"
+  },
+  "id": "jSVjM6RmDeuNC9tW",
+  "tags": []
+}
